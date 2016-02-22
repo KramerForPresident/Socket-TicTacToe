@@ -31,6 +31,8 @@ h1 {
     list-style: none;
     float: left;
     overflow: hidden;
+    font-size: 40px;
+    color: #ed4e6e
     text-decoration:none;
     width: 100px;
     height: 100px;
@@ -45,15 +47,7 @@ h1 {
     box-sizing: border-box;
 }
 
-#game > li.x {
-    font-size: 40px;
-    color: #ed4e6e
-}
 
-#game > li.o {
-    font-size: 40px;
-    color: #485b6e;
-}
 
 #game > li:hover {
     background: #f9f9f9;
