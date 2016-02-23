@@ -48,6 +48,12 @@ h1 {
 }
 
 
+.resetButton{
+	border: 3px solid white;
+	color: white;
+	padding: 5px;
+}
+
 
 #game > li:hover {
     background: #f9f9f9;

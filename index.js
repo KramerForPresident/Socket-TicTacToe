@@ -68,6 +68,7 @@ function checkWin(){
 			return true;
 	}
 	
+	
 
 }
 
@@ -100,10 +101,9 @@ io.on('connection', function(socket){
 		
 		printBoard();
 
-		if(checkWin){
-			console.log("That's a win!!");
+		if(checkWin()){
+		//	console.log("That's a win!!");
 			socket.emit('game over');
-		
 		}		
 		
 	});
