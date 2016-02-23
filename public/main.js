@@ -11,9 +11,24 @@ $(function(){
 	});
 	
 	$('#00').click(function(){
-		console.log("0,0");
-		$(this).append("<li class='x'>X</li>");
+		//console.log("0,0");
+		//console.log($(this).html());
+		if($(this).html() == ""){//cell is empty, can be filled in
+			//console.log("NULL VALUE");
+			if(xTurn == true){
+				$(this).append("<li class='x'>X</li>");
+				xTurn = false;
+			}
+			else{
+				$(this).append("<li class='o'>O</li>");
+				xTurn = true;
+			}
+		}
+
+			
 	});
+	
+	
 
 
 	
