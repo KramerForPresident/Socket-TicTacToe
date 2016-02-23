@@ -12,15 +12,15 @@ var cells = new Array();
 for(var i = 0; i < 3; i++){
 	cells[i]= new Array();
 	for(var j = 0; j < 3; j++){
-		cells[i][j]=" _ ";
+		cells[i][j]="_";
 	}
 }
 
 function printBoard(){
-		console.log("Printing....");
 		for(var i=0; i < 3; i++){
-		console.log(cells[i][0] + "" + cells[i][1] + "" + cells[i][2] + "\n");
+		console.log(cells[i][0] + "" + cells[i][1] + "" + cells[i][2]);
 	}
+	console.log("\n");
 }
 
 
@@ -49,7 +49,12 @@ io.on('connection', function(socket){
 	socket.on('mark board', function(input){
 		var i= parseInt(input.cell.charAt(0));
 		var j = parseInt(input.cell.charAt(1));
-		console.log("cell marked: " + i + ", " + j + " with " + input.val);
+		//console.log("cell marked: " + i + ", " + j + " with " + input.val);
+		cells[i][j] = input.val;
+		
+		printBoard();
+		
+		
 		
 	});
 	
