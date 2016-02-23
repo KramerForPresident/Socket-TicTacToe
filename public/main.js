@@ -5,6 +5,9 @@ $(function(){
 	var xTurn = true;
 	
 	
+	var gameOver = false;
+	
+	
 	
 	//function that handles the click on the board
 	function mark(coord, $target){
@@ -29,67 +32,71 @@ $(function(){
 	
 	
 	//first row
+	if(gameOver == false){
 	
-	$('#00').click(function(){		
-		var coord = $(this).attr('id');		
-		mark(coord, this);
-	});
+		$('#00').click(function(){		
+			var coord = $(this).attr('id');		
+			mark(coord, this);
+		});
 	
 	
-	$('#01').click(function(){		
-		var coord = $(this).attr('id');
-		mark(coord, this);
+		$('#01').click(function(){		
+			var coord = $(this).attr('id');
+			mark(coord, this);
 
-	});
+		});
 	
 	
-	$('#02').click(function(){		
-		var coord = $(this).attr('id');
-		mark(coord, this);	
-	});	
+		$('#02').click(function(){		
+			var coord = $(this).attr('id');
+			mark(coord, this);	
+		});	
 	
 	
-	//second row
+		//second row
 	
-	$('#10').click(function(){		
-		var coord = $(this).attr('id');		
-		mark(coord, this);
-	});
+		$('#10').click(function(){		
+			var coord = $(this).attr('id');		
+			mark(coord, this);
+		});
 	
 	
-	$('#11').click(function(){		
-		var coord = $(this).attr('id');
-		mark(coord, this);
+		$('#11').click(function(){		
+			var coord = $(this).attr('id');
+			mark(coord, this);
 
-	});
+		});
 	
 	
-	$('#12').click(function(){		
-		var coord = $(this).attr('id');
-		mark(coord, this);	
-	});	
+		$('#12').click(function(){		
+			var coord = $(this).attr('id');
+			mark(coord, this);	
+		});	
 	
 	
 	
-	//third row
+		//third row
 	
-	$('#20').click(function(){		
-		var coord = $(this).attr('id');		
-		mark(coord, this);
-	});
+		$('#20').click(function(){		
+			var coord = $(this).attr('id');		
+			mark(coord, this);
+		});
 	
 	
-	$('#21').click(function(){		
-		var coord = $(this).attr('id');
-		mark(coord, this);
+		$('#21').click(function(){		
+			var coord = $(this).attr('id');
+			mark(coord, this);
 
-	});
+		});
 	
 	
-	$('#22').click(function(){		
-		var coord = $(this).attr('id');
-		mark(coord, this);	
-	});	
+		$('#22').click(function(){		
+			var coord = $(this).attr('id');
+			mark(coord, this);	
+		});	
+	
+	
+	}
 	
 	
 	

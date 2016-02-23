@@ -12,7 +12,7 @@ var cells = new Array();
 for(var i = 0; i < 3; i++){
 	cells[i]= new Array();
 	for(var j = 0; j < 3; j++){
-		cells[i][j]="_";
+		cells[i][j]= null;
 	}
 }
 
@@ -24,6 +24,52 @@ function printBoard(){
 }
 
 
+
+function checkWin(){
+
+	//check the rows
+
+	for(var i = 0; i < 3; i++){
+		if(cells[i][0] != null && (
+			(cells[i][0] == cells[i][1])&&
+			(cells[i][0] == cells[i][2])&&
+			(cells[i][1] == cells[i][2]))){
+				//console.log("That's a win");
+				return true;
+		}
+	}
+	
+	//check the columns
+	for(var j = 0; j < 3; j++){
+		if(cells[0][j] != null && (
+			(cells[0][j] == cells[1][j])&&
+			(cells[0][j] == cells[1][j])&&
+			(cells[1][j] == cells[2][j]))){
+				//console.log("That's a win");
+				return true;
+		}
+	}
+	
+	//special (diagonals)
+	
+	if(cells[0][0] != null && (
+		(cells[0][0] == cells[1][1])&&
+		(cells[0][0] == cells[2][2])&&
+		(cells[1][1] == cells[2][2]))){
+			//console.log("That's a win");
+			return true;
+	}
+	
+	if(cells[0][2] != null && (
+		(cells[0][2] == cells[1][1])&&
+		(cells[0][2] == cells[2][0])&&
+		(cells[1][1] == cells[2][2]))){
+			//console.log("That's a win");
+			return true;
+	}
+	
+
+}
 
 
 
@@ -53,8 +99,12 @@ io.on('connection', function(socket){
 		cells[i][j] = input.val;
 		
 		printBoard();
+
+		if(checkWin){
+			console.log("That's a win!!");
+			socket.emit('game over');
 		
-		
+		}		
 		
 	});
 	
