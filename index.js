@@ -8,6 +8,8 @@ var io = require('socket.io')(http);
 var runningCount = 0;
 var numUsers = 0;
 
+var xTurn = true;
+
 var cells = new Array();
 for(var i = 0; i < 3; i++){
 	cells[i]= new Array();
@@ -93,17 +95,31 @@ io.on('connection', function(socket){
 	
 	
 	
-	socket.on('mark board', function(input){
-		var i= parseInt(input.cell.charAt(0));
-		var j = parseInt(input.cell.charAt(1));
-		//console.log("cell marked: " + i + ", " + j + " with " + input.val);
-		cells[i][j] = input.val;
+	socket.on('mark board', function(coord){
+		var i= parseInt(coord.charAt(0));
+		var j = parseInt(coord.charAt(1));
+
+		var mark;
 		
+		
+		if(xTurn == true){
+			mark = 'X';
+			xTurn = false;	
+		}else{
+		
+			mark = 'O';
+			xTurn = true;
+		}
+		cells[i][j] = mark;
+
+
+
+		io.emit('place marker', {cell: coord, val: mark});
 		printBoard();
 
 		if(checkWin()){
 		//	console.log("That's a win!!");
-			socket.emit('game over');
+			io.emit('game over');
 		}		
 		
 	});
