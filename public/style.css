@@ -7,6 +7,10 @@ body {
     text-align:center;
 }
 
+a{
+	text-decoration:none;  
+}
+
 h1 {
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -52,6 +56,10 @@ h1 {
 	border: 3px solid white;
 	color: white;
 	padding: 5px;
+}
+
+.standby{
+	color: white;
 }
 
 

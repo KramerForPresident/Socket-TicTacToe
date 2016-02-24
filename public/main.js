@@ -1,5 +1,6 @@
 $(function(){
 	$('.resetButton').hide();
+	$('.standby').hide();
 	var socket = io();
 	var username;
 	var gameOver = false;
@@ -48,6 +49,15 @@ $(function(){
 	
 	
 	
+	
+	$('.resetButton').click(function(){
+		console.log("Reset");
+		socket.emit('new game');
+		$('.resetButton').hide();
+		$('.standby').show();
+	});
+	
+	
 	//receives the specific id and sends info to the server
 	function mark(coord, $target){
 		//console.log("Coordinate is " + coord);
@@ -61,7 +71,32 @@ $(function(){
 	}	
 	
 	
+	function removeMarkers(){
+		var target;
+		
+		for(var i = 0; i < 3; i++){
+			for(var j = 0; j < 3; j++){
+				$target = "#" + i + "" + j;
+				console.log(target);
+				$($target).children().remove();
+			}
+		}
+		console.log("board cleared");
+				
 	
+	
+	
+	
+	}
+	
+	
+	socket.on('clear board', function(){
+		$('.standby').hide();
+		removeMarkers();
+		gameOver = false;
+		
+	});
+
 	
 	
 	
@@ -79,8 +114,6 @@ $(function(){
 	//game over state has been achieved: display a message
 	socket.on('game over', function(){
 		gameOver = true;
-		console.log("GAME OVER");
-		$('#messages').append("<li>Game over!!!!!</li>");
 		$('.resetButton').show();
 	});
 	

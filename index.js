@@ -12,6 +12,9 @@ var xTurn = true;
 var cells = new Array();
 
 
+var readyCount = 0;
+
+
 //create 2d array, fill it with nulls
 for(var i = 0; i < 3; i++){
 	cells[i]= new Array();
@@ -115,6 +118,33 @@ io.on('connection', function(socket){
 			io.emit('game over');
 		}		
 	});
+	
+	
+	
+	//clear the board
+	socket.on('new game', function(){
+		readyCount++;
+		if(readyCount >= 2){
+			readyCount = 0;
+			
+			
+			console.log("Clearing");
+			//clear the board
+			for(var i = 0; i < 3; i++){
+				for(var j = 0; j < 3; j++){
+					cells[i][j] = null;
+				}
+			}		
+			xTurn = true;
+			
+			io.emit('clear board');
+		}
+	
+	});
+	
+	
+	
+	
 });
 
 //start the server
