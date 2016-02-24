@@ -4,13 +4,15 @@ var http = require('http').Server(app);
 
 var io = require('socket.io')(http);
 
+app.use(express.static(__dirname + '/public'));
 
 var runningCount = 0;
 var numUsers = 0;
-
 var xTurn = true;
-
 var cells = new Array();
+
+
+//create 2d array, fill it with nulls
 for(var i = 0; i < 3; i++){
 	cells[i]= new Array();
 	for(var j = 0; j < 3; j++){
@@ -18,6 +20,8 @@ for(var i = 0; i < 3; i++){
 	}
 }
 
+
+//function to print an approximation of board
 function printBoard(){
 		for(var i=0; i < 3; i++){
 		console.log(cells[i][0] + "" + cells[i][1] + "" + cells[i][2]);
@@ -26,11 +30,9 @@ function printBoard(){
 }
 
 
-
+//function returns true if there is a winstate
 function checkWin(){
-
 	//check the rows
-
 	for(var i = 0; i < 3; i++){
 		if(cells[i][0] != null && (
 			(cells[i][0] == cells[i][1])&&
@@ -69,17 +71,13 @@ function checkWin(){
 			//console.log("That's a win");
 			return true;
 	}
-	
-	
-
 }
 
 
 
 
 
-app.use(express.static(__dirname + '/public'));
-
+//called when clients connect 
 io.on('connection', function(socket){
 	runningCount++;
 	numUsers++;
@@ -94,41 +92,32 @@ io.on('connection', function(socket){
 	});
 	
 	
-	
+	//mark the board
 	socket.on('mark board', function(coord){
 		var i= parseInt(coord.charAt(0));
 		var j = parseInt(coord.charAt(1));
-
 		var mark;
-		
 		
 		if(xTurn == true){
 			mark = 'X';
 			xTurn = false;	
 		}else{
-		
 			mark = 'O';
 			xTurn = true;
 		}
+		
 		cells[i][j] = mark;
-
-
-
 		io.emit('place marker', {cell: coord, val: mark});
 		printBoard();
 
 		if(checkWin()){
-		//	console.log("That's a win!!");
+			console.log("That's a win!!");
 			io.emit('game over');
 		}		
-		
 	});
-	
-	
-	
 });
 
-
+//start the server
 http.listen(3000, function(){
 	console.log('listening on *:\nhttp://localhost:3000/');
 });

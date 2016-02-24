@@ -2,11 +2,10 @@ $(function(){
 	$('.resetButton').hide();
 	var socket = io();
 	var username;
-	var xTurn = true;
 	var gameOver = false;
 	
-	
-	
+	//below are the click handlers for the board.
+	//it calls the mark function by passing the div's id
 	//first row
 	$('#00').click(function(){		
 		var coord = $(this).attr('id');		
@@ -48,22 +47,13 @@ $(function(){
 	});	
 	
 	
-	//function that handles the click on the board
+	
+	//receives the specific id and sends info to the server
 	function mark(coord, $target){
 		//console.log("Coordinate is " + coord);
-		if(gameOver == false){
-			//console.log("Marking....");
-			if($($target).html() == ""){//cell is empty, can be filled in
-
-				if(xTurn == true){
-					socket.emit('mark board', coord);
-					xTurn = false;
-				}
-				else{
-					socket.emit('mark board', coord);
-					xTurn = true;
-				}
-			}
+		if((gameOver == false)&&($($target).html() == "")){
+			//cell is empty, can be filled in
+			socket.emit('mark board', coord);
 		}
 		else{
 			//don't do anything
@@ -76,7 +66,7 @@ $(function(){
 	
 	
 	
-	
+	//places marker on all clients
 	socket.on('place marker', function(data){
 		var $space = "#" + data.cell;
 		var mark = data.val;
@@ -86,6 +76,7 @@ $(function(){
 	
 	});
 	
+	//game over state has been achieved: display a message
 	socket.on('game over', function(){
 		gameOver = true;
 		console.log("GAME OVER");
