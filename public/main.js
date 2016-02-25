@@ -88,6 +88,28 @@ $(function(){
 		console.log("board cleared");
 	}
 	
+	socket.on('show turn', function(data){
+		var turn = data.t;
+		var opp;
+		var message;
+		if(team == "X"){
+			opp = "O";
+		}
+		else{
+			opp = "X";
+		}
+			
+		
+		console.log("It's " + turn + "'s turn");
+		if(turn == team){
+			//it's currently your turn
+			message = "You are " + team + ". It's your turn.";
+		}else{
+			message = "Waiting for " + opp + " to make a move."
+		}
+		$('#pane').text(message);
+	});
+	
 	
 	socket.on('set team', function(data){
 		team = data.t;
@@ -108,7 +130,7 @@ $(function(){
 		var $space = "#" + data.cell;
 		var mark = data.val;
 		var lower = mark.toLowerCase();
-		console.log("Placing marker on boards: " + mark + " at " + $space);
+		//console.log("Placing marker on boards: " + mark + " at " + $space);
 		$($space).append("<li class='" + lower + "'>" +  mark + "</li>");
 	
 	});

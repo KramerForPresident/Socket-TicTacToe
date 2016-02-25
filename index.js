@@ -28,10 +28,12 @@ function changeTeam(current){
 	if(current == "X"){
 		xTurn = false;
 		console.log("It is O's turn now");
+		return "O";
 	}
 	else{
 		xTurn = true;
 		console.log("It is X's turn now");
+		return "X";
 	}
 		
 
@@ -106,14 +108,17 @@ io.on('connection', function(socket){
 		}
 		socket.emit('set team', {t: socket.team});
 
-		
+		io.emit('show turn', {t: "X"}); //show x as the first turn
+
 		
 		console.log("Connecting as... " + socket.team);
 	
 		socket.on('disconnect', function(){
-			console.log(socket.username + ' has disconnected');
-			numUsers--;
+			//console.log(socket.username + ' has disconnected');
+			//numUsers--;
 		});
+		
+
 	
 	
 		//mark the board
@@ -140,8 +145,9 @@ io.on('connection', function(socket){
 				}
 				
 				
-				changeTeam(socket.team);
+				var next = changeTeam(socket.team);
 				//change who's turn it is
+				io.emit('show turn', {t: next});
 				
 				
 			}else{
