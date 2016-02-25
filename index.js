@@ -6,7 +6,6 @@ var io = require('socket.io')(http);
 
 app.use(express.static(__dirname + '/public'));
 
-var runningCount = 0;
 var numUsers = 0;
 var xTurn = true;
 var cells = new Array();
@@ -21,6 +20,21 @@ for(var i = 0; i < 3; i++){
 	for(var j = 0; j < 3; j++){
 		cells[i][j]= null;
 	}
+}
+
+
+
+function changeTeam(current){
+	if(current == "X"){
+		xTurn = false;
+		console.log("It is O's turn now");
+	}
+	else{
+		xTurn = true;
+		console.log("It is X's turn now");
+	}
+		
+
 }
 
 
@@ -82,65 +96,84 @@ function checkWin(){
 
 //called when clients connect 
 io.on('connection', function(socket){
-	runningCount++;
-	numUsers++;
-	var assignedName = 'User ' + String.fromCharCode(64 + runningCount);
-	console.log(assignedName + ' has connected.');
-	socket.username = assignedName;
-		
-	
-	socket.on('disconnect', function(){
-		console.log(socket.username + ' has disconnected');
-		numUsers--;
-	});
-	
-	
-	//mark the board
-	socket.on('mark board', function(coord){
-		var i= parseInt(coord.charAt(0));
-		var j = parseInt(coord.charAt(1));
-		var mark;
-		
-		if(xTurn == true){
-			mark = 'X';
-			xTurn = false;	
-		}else{
-			mark = 'O';
-			xTurn = true;
-		}
-		
-		cells[i][j] = mark;
-		io.emit('place marker', {cell: coord, val: mark});
-		printBoard();
 
-		if(checkWin()){
-			console.log("That's a win!!");
-			io.emit('game over');
-		}		
-	});
-	
-	
-	
-	//clear the board
-	socket.on('new game', function(){
-		readyCount++;
-		if(readyCount >= 2){
-			readyCount = 0;
-			
-			
-			console.log("Clearing");
-			//clear the board
-			for(var i = 0; i < 3; i++){
-				for(var j = 0; j < 3; j++){
-					cells[i][j] = null;
-				}
-			}		
-			xTurn = true;
-			
-			io.emit('clear board');
+		numUsers++;
+
+		if(numUsers%2 == 1){
+			socket.team = "X";
+		}else{
+			socket.team = "O";
 		}
+		socket.emit('set team', {t: socket.team});
+
+		
+		
+		console.log("Connecting as... " + socket.team);
 	
-	});
+		socket.on('disconnect', function(){
+			console.log(socket.username + ' has disconnected');
+			numUsers--;
+		});
+	
+	
+		//mark the board
+		socket.on('mark board', function(coord){
+			if(	(xTurn == true && socket.team == "X")||
+				(xTurn == false && socket.team == "O")){
+				
+				console.log(socket.team + " has control right now...");
+		
+		
+				var i= parseInt(coord.charAt(0));
+				var j = parseInt(coord.charAt(1));
+		
+				cells[i][j] = socket.team;
+				io.emit('place marker', {cell: coord, val: socket.team});
+				printBoard();
+				
+				
+			
+				//check the win
+				if(checkWin()){
+					console.log("That's a win!!");
+					io.emit('game over');
+				}
+				
+				
+				changeTeam(socket.team);
+				//change who's turn it is
+				
+				
+			}else{
+				//nothing happens, it's not this client's turn
+			}		
+		});
+	
+	
+	
+	
+	
+	
+		//clear the board
+		socket.on('new game', function(){
+			readyCount++;
+			if(readyCount >= 2){
+				readyCount = 0;
+			
+			
+				console.log("Clearing");
+				//clear the board
+				for(var i = 0; i < 3; i++){
+					for(var j = 0; j < 3; j++){
+						cells[i][j] = null;
+					}
+				}		
+				xTurn = true;
+			
+				io.emit('clear board');
+			}
+	
+		});
 	
 	
 	

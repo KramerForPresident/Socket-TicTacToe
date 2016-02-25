@@ -2,8 +2,11 @@ $(function(){
 	$('.resetButton').hide();
 	$('.standby').hide();
 	var socket = io();
-	var username;
+	var team;
 	var gameOver = false;
+	
+	
+	
 	
 	//below are the click handlers for the board.
 	//it calls the mark function by passing the div's id
@@ -61,7 +64,8 @@ $(function(){
 	//receives the specific id and sends info to the server
 	function mark(coord, $target){
 		//console.log("Coordinate is " + coord);
-		if((gameOver == false)&&($($target).html() == "")){
+		if	((gameOver == false)&&
+			($($target).html() == "")){
 			//cell is empty, can be filled in
 			socket.emit('mark board', coord);
 		}
@@ -82,12 +86,14 @@ $(function(){
 			}
 		}
 		console.log("board cleared");
-				
-	
-	
-	
-	
 	}
+	
+	
+	socket.on('set team', function(data){
+		team = data.t;
+		console.log("Team is.... " + team);
+
+	});
 	
 	
 	socket.on('clear board', function(){
@@ -95,11 +101,7 @@ $(function(){
 		removeMarkers();
 		gameOver = false;
 		
-	});
-
-	
-	
-	
+	});	
 	
 	//places marker on all clients
 	socket.on('place marker', function(data){
@@ -120,7 +122,6 @@ $(function(){
 	
 	socket.on('new user', function(data){
 		console.log(data.username + " has connected");
-		//$('#messages').append('<li>' + data.username + ' has connected. Say hello!</li>');
 	});
 
 
