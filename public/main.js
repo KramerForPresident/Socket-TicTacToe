@@ -3,9 +3,8 @@ $(function(){
 	$('.standby').hide();
 	var socket = io();
 	var team;
+	var opp;
 	var gameOver = false;
-	
-	
 	
 	
 	//below are the click handlers for the board.
@@ -51,10 +50,8 @@ $(function(){
 	});	
 	
 	
-	
-	
+	//reset button handler. appears when game ends, disappears when clicked
 	$('.resetButton').click(function(){
-		console.log("Reset");
 		socket.emit('new game');
 		$('.resetButton').hide();
 		$('.standby').show();
@@ -74,56 +71,65 @@ $(function(){
 		}
 	}	
 	
-	
+	//removes board HTML elements
 	function removeMarkers(){
 		var target;
 		
 		for(var i = 0; i < 3; i++){
 			for(var j = 0; j < 3; j++){
 				$target = "#" + i + "" + j;
-				console.log(target);
 				$($target).children().remove();
 			}
 		}
-		console.log("board cleared");
+		//console.log("board cleared");
 	}
 	
-	socket.on('show turn', function(data){
-		var turn = data.t;
-		var opp;
-		var message;
+	
+/*____________________Socket Functions____________________________*/
+
+
+
+	//Sets the client's team (either X or O)
+	//This gets called upon connecting to server
+	socket.on('set team', function(data){
+		//here we will set the client's team, as well as their opponent
+		team = data.t;
 		if(team == "X"){
 			opp = "O";
 		}
 		else{
 			opp = "X";
 		}
-			
 		
-		console.log("It's " + turn + "'s turn");
+		console.log("Team is.... " + team);
+
+	});	
+
+
+	//displays whose turn it is
+	socket.on('show turn', function(data){
+		var turn = data.t;
+		var message;
+		
 		if(turn == team){
 			//it's currently your turn
 			message = "You are " + team + ". It's your turn.";
 		}else{
 			message = "Waiting for " + opp + " to make a move."
 		}
+		
 		$('#pane').text(message);
 	});
 	
 	
-	socket.on('set team', function(data){
-		team = data.t;
-		console.log("Team is.... " + team);
-
-	});
-	
-	
+	//hides reset buttons, starts a new game
 	socket.on('clear board', function(){
 		$('.standby').hide();
 		removeMarkers();
 		gameOver = false;
 		
 	});	
+	
 	
 	//places marker on all clients
 	socket.on('place marker', function(data){
@@ -135,18 +141,13 @@ $(function(){
 	
 	});
 	
+	
 	//game over state has been achieved: display a message
 	socket.on('game over', function(){
 		gameOver = true;
 		$('.resetButton').show();
 	});
 	
-	
-	socket.on('new user', function(data){
-		console.log(data.username + " has connected");
-	});
-
-
 });
 
 
